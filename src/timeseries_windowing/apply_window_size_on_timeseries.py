@@ -26,7 +26,7 @@ def apply_window_size_on_time_series(inputs,
                     It's shape is (n,targets).
     :param input_window_size: 
     :param output_window_size: 
-    :param output_window_forward_shift: this indicates the lag between input and output
+    :param offset: this indicates the lag between input and output
                                         windows. If this is 0, both windows start from the same level.
     :param sampling_rate: this will apply on both inputs and targets.
     :param seed:,
@@ -93,16 +93,16 @@ def apply_window_size_on_time_series(inputs,
         # If they are the same, no need to truncate end of the inputs, O.W. we have to truncate last rows of the 
         # inputs.
         level_of_future_edge_of_in_out_windows_are_different = True if \
-                                    (output_window_forward_shift +
+                                    (offset +
                                      output_window_size !=\
                                      input_window_size) else False
         if level_of_future_edge_of_in_out_windows_are_different:
             how_much_onward_is_the_future_edge_of_out_window_vs_in_window = \
-                                    (output_window_forward_shift + 
+                                    (offset + 
                                     output_window_size -
                                     input_window_size)
             if how_much_onward_is_the_future_edge_of_out_window_vs_in_window < 0:
-                raise ValueError('output_window_forward_shift + output_window_size >= input_window_size')
+                raise ValueError('offset + output_window_size >= input_window_size')
             number_of_rows_to_be_cut_from_end_of_the_inputs = \
                                     how_much_onward_is_the_future_edge_of_out_window_vs_in_window # last row adresses with -1 so we add one
             inputs = inputs.iloc[:-1*(number_of_rows_to_be_cut_from_end_of_the_inputs)]
@@ -114,12 +114,12 @@ def apply_window_size_on_time_series(inputs,
         # If they are the same, no need to truncate targets, O.W. we have to truncate first rows of the 
         # targets.
         level_of_historical_edge_of_in_out_windows_are_different = True if \
-                                    output_window_forward_shift != 0 else False
+                                    offset != 0 else False
         if level_of_historical_edge_of_in_out_windows_are_different:
             how_much_onward_is_the_historical_edge_of_out_window_vs_in_window = \
-                                    output_window_forward_shift
+                                    offset
             if how_much_onward_is_the_historical_edge_of_out_window_vs_in_window < 0:
-                raise ValueError('Output_window can not start before input_window. output_window_forward_shift should be GE 0.')
+                raise ValueError('Output_window can not start before input_window. offset should be GE 0.')
             number_of_rows_to_be_cut_from_beginning_of_the_targets = \
                                     how_much_onward_is_the_historical_edge_of_out_window_vs_in_window
             targets = targets.iloc[number_of_rows_to_be_cut_from_beginning_of_the_targets:]
