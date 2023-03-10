@@ -1,6 +1,6 @@
 def _window_stack(a, stepsize, width):
     import numpy as np
-    return np.hstack( a[i:1+i-width or None:stepsize] for i in range(0,width) )
+    return np.hstack([a[i:1+i-width or None:stepsize] for i in range(0,width)])
     
 def apply_window_size_on_time_series(inputs, 
                         targets,
