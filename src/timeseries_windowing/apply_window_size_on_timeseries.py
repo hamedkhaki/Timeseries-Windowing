@@ -25,6 +25,12 @@ def apply_window_size_on_time_series(inputs,
     In "training" mode, the method accepts two dataframes: inputs and targets, and returns 
     w_inputs and w_targets. But in "forecast" mode, it ignores the targets 
     and only returns w_inputs.
+    Sections by order:
+        # Truncate if start_index and end_index
+        # Sampling is not supported in this version
+        # Apply window sizes (considering stride)
+        # Shuffle
+        # Apply batch_size
 
     :param inputs: this is a dataframe which contains features and it's shape is (n,features).
     :param targets: this is a dataframe which contains targets. It suppurts multi target operations.
@@ -39,9 +45,9 @@ def apply_window_size_on_time_series(inputs,
     :param shuffle: If shuffle is True, to keep the indices correct, same reordering will be happen 
                     to inputs and targets.
     :param batch_size: batch_size. if None, the method returns all data in one batch.
-    :param start_index: this is usefull in "forecast" mode which windowing will be applied on a part of data and
+    :param start_index: this is applicable if mode = "forecast", which windowing will be applied on a part of data and
                         not the whole dataframe.
-    :param end_index: this is usefull in "forecast" mode which windowing will be applied on a part of data and
+    :param end_index: this is applicable if mode = "forecast", which windowing will be applied on a part of data and
                         not the whole dataframe. 
     :param execution_mode: accepts two different modes: "forecast" and "training". If training, the method expects
                         both inputs and targets, and start/end index are not necessary. If forecast, the method expects
@@ -64,11 +70,6 @@ def apply_window_size_on_time_series(inputs,
 
     import pandas as pd
     import numpy as np
-        # Truncate if start_index and end_index
-        # Sampling is not supported in this version
-        # Apply window sizes (considering stride)
-        # Shuffle
-        # Apply batch_size
                         
     # To keep the operations uniform, convert the input arguments to pandas dataframe if
     # they are pandas series.
